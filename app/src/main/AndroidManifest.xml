@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.testbirds.detoxifier">
 
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -33,6 +36,7 @@
             android:name="com.testbirds.detoxifier.service.BlacklistService"
             android:enabled="true"
             android:exported="false" />
+
     </application>
 
 </manifest>

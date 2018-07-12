@@ -24,8 +24,8 @@ public interface AppDataDao {
     @Query("SELECT * FROM app_data WHERE id IN (:appDataIds)")
     List<AppData> loadAllByIds(int[] appDataIds);
 
-    @Query("SELECT * FROM app_data WHERE app_name LIKE :appName LIMIT 1")
-    AppData findByName(String appName);
+    @Query("SELECT * FROM app_data WHERE app_package LIKE :appPackage LIMIT 1")
+    Flowable<AppData> findByPackage(String appPackage);
 
     @Insert
     void insertAll(AppData... appDataList);

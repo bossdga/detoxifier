@@ -1,11 +1,13 @@
 package com.testbirds.detoxifier.fragment;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
+import android.annotation.TargetApi;
+import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,12 +19,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.testbirds.detoxifier.OnAppDataClickListener;
 import com.testbirds.detoxifier.R;
 import com.testbirds.detoxifier.adapter.AppDataAdapter;
 import com.testbirds.detoxifier.model.AppData;
 import com.testbirds.detoxifier.service.BlacklistService;
+import com.testbirds.detoxifier.util.MessageUtils;
 
 import java.util.List;
 
@@ -129,20 +133,45 @@ public class MainFragment extends BaseFragment implements OnAppDataClickListener
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.start_detoxifier:
-                System.out.println("::: Service started");
-                Intent intent = new Intent(getActivity(), BlacklistService.class);
-                PendingIntent pIntent = PendingIntent.getService(getActivity(), 0, intent, 0);
-                AlarmManager alarm = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
-                alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 5000, pIntent);
+                if(needsUsageStatsPermission()) {
+                    requestUsageStatsPermission();
+                }
+                BlacklistService.start(getActivity().getBaseContext());
+                MessageUtils.showMessage(getActivity(), R.string.detoxifier_started, Toast.LENGTH_LONG);
                 break;
             case R.id.stop_detoxifier:
-                getActivity().stopService(new Intent(getActivity(), BlacklistService.class));
+                BlacklistService.stop(getActivity().getBaseContext());
+                MessageUtils.showMessage(getActivity(), R.string.detoxifier_stopped, Toast.LENGTH_LONG);
                 break;
             default:
                 break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean needsUsageStatsPermission() {
+        return postLollipop() && !hasUsageStatsPermission(getActivity());
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void requestUsageStatsPermission() {
+        if(!hasUsageStatsPermission(getActivity())) {
+            startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+        }
+    }
+
+    private boolean postLollipop() {
+        return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private boolean hasUsageStatsPermission(Context context) {
+        AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+        int mode = appOps.checkOpNoThrow("android:get_usage_stats",
+                android.os.Process.myUid(), context.getPackageName());
+        boolean granted = mode == AppOpsManager.MODE_ALLOWED;
+        return granted;
     }
 
 }

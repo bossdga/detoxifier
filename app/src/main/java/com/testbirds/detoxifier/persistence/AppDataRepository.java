@@ -16,6 +16,7 @@ public class AppDataRepository {
 
     private AppDataDao appDataDao;
     private Flowable<List<AppData>> appDataList;
+    private Flowable<AppData> appData;
 
     public AppDataRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
@@ -32,6 +33,10 @@ public class AppDataRepository {
 
     public void delete (AppData appData) {
         new DeleteApplicationTask(appDataDao).execute(appData);
+    }
+
+    public Flowable<AppData> findByPackage (String packageName) {
+        return this.appDataDao.findByPackage(packageName);
     }
 
     /**

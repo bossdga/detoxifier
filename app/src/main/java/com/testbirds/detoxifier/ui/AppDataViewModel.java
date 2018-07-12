@@ -32,6 +32,9 @@ public class AppDataViewModel extends AndroidViewModel {
 
    public void delete(AppData appData) {
         mRepository.delete(appData);
-    }
+   }
+   public Flowable<AppData> findByPackage(String packageName) {
+        return mRepository.findByPackage(packageName);
+   }
 
 }
