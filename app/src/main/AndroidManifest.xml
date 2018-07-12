@@ -30,7 +30,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service
-            android:name="service.BlacklistService"
+            android:name="com.testbirds.detoxifier.service.BlacklistService"
             android:enabled="true"
             android:exported="false" />
     </application>

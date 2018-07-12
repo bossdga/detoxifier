@@ -1,6 +1,10 @@
 package com.testbirds.detoxifier.fragment;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -126,11 +130,13 @@ public class MainFragment extends BaseFragment implements OnAppDataClickListener
         switch (item.getItemId()) {
             case R.id.start_detoxifier:
                 System.out.println("::: Service started");
-                BlacklistService.start(getActivity());
+                Intent intent = new Intent(getActivity(), BlacklistService.class);
+                PendingIntent pintent = PendingIntent.getService(getActivity(), 0, intent, 0);
+                AlarmManager alarm = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
+                alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 5000, pintent);
                 break;
             case R.id.stop_detoxifier:
-                System.out.println("::: Service stopped");
-                BlacklistService.stop(getActivity());
+                getActivity().stopService(new Intent(getActivity(), BlacklistService.class));
                 break;
             default:
                 break;
