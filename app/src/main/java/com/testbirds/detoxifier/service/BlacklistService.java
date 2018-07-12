@@ -7,6 +7,10 @@ import android.support.annotation.Nullable;
 
 public class BlacklistService extends IntentService {
 
+    public BlacklistService() {
+        super("BlacklistService");
+    }
+
     public BlacklistService(String name) {
         super(name);
     }

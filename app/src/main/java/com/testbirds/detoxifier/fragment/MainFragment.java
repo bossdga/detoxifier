@@ -131,9 +131,9 @@ public class MainFragment extends BaseFragment implements OnAppDataClickListener
             case R.id.start_detoxifier:
                 System.out.println("::: Service started");
                 Intent intent = new Intent(getActivity(), BlacklistService.class);
-                PendingIntent pintent = PendingIntent.getService(getActivity(), 0, intent, 0);
+                PendingIntent pIntent = PendingIntent.getService(getActivity(), 0, intent, 0);
                 AlarmManager alarm = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
-                alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 5000, pintent);
+                alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 5000, pIntent);
                 break;
             case R.id.stop_detoxifier:
                 getActivity().stopService(new Intent(getActivity(), BlacklistService.class));
