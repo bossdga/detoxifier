@@ -1,6 +1,8 @@
 # detoxifier
 
-This app has two fragments:  
+This app allows you to set up a blacklist of forbidden apps.
+
+It has two fragments:  
 AppListFragment: This fragment is showing the list of installed apps.  
 MainFragment: This fragment is showing the list of blacklisted apps.  
 
